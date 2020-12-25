@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Controller, IRoute, Methods } from '../controller';
+import { Controller, Methods} from '../../types';
 
 /**
  * @class AuthController
@@ -17,7 +17,7 @@ export class AuthController extends Controller {
         super();
     }
 
-    public handleLogin(req: Request, res: Response, next: NextFunction): void {
+    public handleLogin(req: Request, res: Response): void {
         res.json({
             data: {
                 firstName: 'ahmet',

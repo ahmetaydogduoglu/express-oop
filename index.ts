@@ -1,16 +1,20 @@
-import express, { Router } from 'express';
+import express, { RequestHandler } from 'express';
 import { AuthController } from './src/controller';
-import bodyParser from 'body-parser';
-const port: number = 8080;
+import { json, urlencoded } from 'body-parser';
+import { Controller, Server } from './src/types';
 const app = express();
 
-//use body-parser
-app.use(bodyParser.json());
+const middlewares: Array<RequestHandler> = [
+    json(),
+    urlencoded({extended: false})
+]
 
-//routers
-const authController = new AuthController();
-app.use(authController.path, authController.setRoutes());
+const controllers: Array<Controller> = [
+    new AuthController
+];
 
-app.listen(port, () => {
-    console.log(`listening ${port}`);
-})
+const server = new Server(app);
+
+server.loadMiddlewares(middlewares);
+server.loadRouters(controllers);
+server.runServer();

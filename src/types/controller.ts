@@ -13,7 +13,7 @@ export enum Methods {
 /**
  * @interface IRoute
  */
-export interface IRoute {
+interface IRoute {
     path: string;
     method: Methods;
     localMiddleware: Array<((req: Request, res: Response, next: NextFunction) => void)>;

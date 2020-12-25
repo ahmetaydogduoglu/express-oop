@@ -1,5 +1,6 @@
 import { Application, RequestHandler } from 'express';
 import { Controller } from './controller';
+import { port } from '../config';
 /**
  * @class Server
  */
@@ -8,7 +9,6 @@ export class Server {
         this.app = app;
     }
     private app: Application;
-    private port: number = 8080;
 
     public loadMiddlewares(middlewares: Array<RequestHandler>): void {
         middlewares.forEach(middleware => {
@@ -23,7 +23,7 @@ export class Server {
     }
 
     public runServer(): void {
-        this.app.listen(this.port, () => {
+        this.app.listen(port, () => {
             console.log('listen to 8080');
         });
     }

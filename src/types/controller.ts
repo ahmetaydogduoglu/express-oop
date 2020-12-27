@@ -1,4 +1,5 @@
 import { Router, Response, Request, NextFunction } from 'express';
+import { toUnicode } from 'punycode';
 
 /**
  * @enum Methods
@@ -51,4 +52,17 @@ export abstract class Controller {
         return this.router;
     }
 
+    protected responseAction(
+        res: Response,
+        data: any,
+        message: string = '',
+        success: boolean = true,
+        status: number = 200
+    ): Response {
+        return res.status(status).json({
+            data,
+            message,
+            success
+        })
+    }
 }

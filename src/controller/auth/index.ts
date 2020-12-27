@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
+
 import { Controller, Methods, ICustomPostMethodsRequest } from '../../types';
 
 /**
@@ -8,6 +9,16 @@ import { Controller, Methods, ICustomPostMethodsRequest } from '../../types';
 interface ILoginRequestBody {
     username: string;
     password: string;
+}
+
+/**
+ * @interface IRegisterBody
+ */
+interface IRegisterBody {
+    username: string;
+    password: string;
+    email: string;
+    fullName: string;
 }
 
 /**
@@ -39,24 +50,32 @@ export class AuthController extends Controller {
             const { username, password } = req.body;
 
             if (username === 'ahmet' && password === 'ahmet') {
-                const token: string = jwt.sign({ username, expiresIn: '24h' }, 'login-key', { expiresIn: '1 days' });
-                super.responseAction(res, { token: token });
+                const token: string = sign({ username, expiresIn: '24h' }, 'login-key', { expiresIn: '1 days' });
+                super.responseAction(res, { token });
             } else {
                 super.responseAction(res, null, 'User Not Found', false, 404);
             }
 
         } catch (error) {
-            super.responseAction(res, null, error as string, false, 500);
+            super.responseAction(res, null, 'UnAuth', false, 401);
         }
     }
 
     public handleTokenVerify(req: Request, res: Response): void {
         const { token } = req.headers;
-        
+
         if (typeof token === 'string') {
-            const validate = jwt.verify(token, 'login-key');
-            super.responseAction(res, { validate: validate });
+            const validate = verify(token, 'login-key');
+            super.responseAction(res, { validate });
         } else {
+            super.responseAction(res, null, 'UnAuth', false, 401);
+        }
+    }
+
+    public handleRegister(req: ICustomPostMethodsRequest<IRegisterBody>, res: Response): void {
+        try {
+            const { email, fullName, password, username } = req.body;
+        } catch (error) {
             super.responseAction(res, null, 'UnAuth', false, 401);
         }
     }
